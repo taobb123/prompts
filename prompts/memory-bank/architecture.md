@@ -17,10 +17,13 @@
 │   ├── main.js            # 主逻辑文件
 │   ├── style-manager.js   # 样式管理模块
 │   ├── style-data-model.js # 样式数据模型
+│   ├── design-differentiator.js # 设计差异化算法
+│   ├── prototype-generator.js # 原型生成器模块
 │   ├── preview.js         # 预览功能模块
 │   └── navigation.js      # 导航模块
 ├── data/
 │   ├── styles.json        # 样式方案数据
+│   ├── generated-prototypes.json # 生成的原型数据
 │   └── STYLE_DATA_SCHEMA.md # 数据结构文档
 ├── assets/
 │   ├── images/            # 图片资源
@@ -80,6 +83,23 @@
   - 颜色验证（isValidColor）
   - 工具方法（getSummary, getSchema, equals）
 
+- **js/design-differentiator.js**: 
+  - DesignDifferentiator类：设计差异化算法
+  - 分析现有原型（analyzeExistingStyles）
+  - 计算颜色差异（calculateColorDifference）
+  - 选择差异化颜色（selectDifferentiatedColors）
+  - 选择差异化布局（selectDifferentiatedLayout）
+  - 选择差异化视觉元素（selectDifferentiatedVisualElements）
+  - 计算差异化说明（calculateDifferences）
+
+- **js/prototype-generator.js**: 
+  - PrototypeGenerator类：原型生成器
+  - 解析描述（parseDescription）
+  - 生成原型（generatePrototype）
+  - 生成CSS代码（generateCSS）
+  - 保存原型（savePrototype）
+  - 获取生成的原型（getGeneratedPrototypes）
+
 - **js/main.js**: 
   - 初始化逻辑
   - 渲染样式卡片列表（renderStyleCards）
@@ -101,16 +121,21 @@
 index.html
   ├── css/main.css (样式)
   ├── js/style-data-model.js (数据模型)
+  ├── js/design-differentiator.js (差异化算法)
+  ├── js/prototype-generator.js (原型生成器)
+  │   └── 依赖 design-differentiator.js
   ├── js/style-manager.js (样式管理)
   │   └── 可选依赖 style-data-model.js (数据验证)
   ├── js/preview.js (预览模块)
   ├── js/navigation.js (导航模块)
   └── js/main.js (主逻辑)
       └── 依赖 style-manager.js
+      └── 依赖 prototype-generator.js
       └── 依赖 preview.js
       └── 依赖 navigation.js
       └── 加载 data/styles.json (失败时使用内联数据)
       └── 动态加载 css/styles/*.css
+      └── 动态注入生成的CSS样式
 ```
 
 ## 关键设计决策
@@ -167,6 +192,33 @@ index.html
 - **决策**: 数据模型验证作为可选功能，不影响现有功能
 - **理由**: 向后兼容，即使数据模型不可用也能正常工作
 
+### 14. 原型生成差异化
+- **决策**: 实现设计差异化算法，确保生成的原型与现有原型保持差异
+- **理由**: 避免生成重复或相似的原型，提供多样化的设计选择
+
+### 15. 动态CSS注入
+- **决策**: 使用style标签动态注入生成的CSS，而非创建物理文件
+- **理由**: 纯前端环境无法写入文件系统，动态注入是最佳解决方案
+
+### 17. 样式作用域限制
+- **决策**: 使用CSS作用域选择器限制生成样式的应用范围
+- **理由**: 确保生成的原型样式只作用于备忘录预览界面，不影响页面整体样式（导航栏、卡片列表等）
+- **实现**: 使用`.preview-content[data-style-id]`选择器，所有样式规则都添加作用域前缀
+
+### 18. 功能点差异化生成
+- **决策**: 生成器侧重于生成不同的小程序结构和功能点，而非仅样式变化
+- **理由**: 提供真正差异化的原型设计，每个原型在功能结构上都有独特性
+- **实现**: 
+  - 分析现有原型的结构和功能点
+  - 生成不同的布局结构（单栏/双栏/三栏、导航位置等）
+  - 生成不同的功能模块（搜索、标签、优先级、时间管理等）
+  - 生成不同的交互方式（侧滑、拖拽、批量操作等）
+  - 生成不同的数据展示方式（列表/卡片/网格/时间轴/日历/看板等）
+
+### 16. 自然语言解析
+- **决策**: 使用关键词匹配和规则解析，而非复杂的NLP库
+- **理由**: 轻量级实现，无需外部依赖，满足基本需求
+
 ## 核心功能模块
 
 ### 样式展示模块
@@ -207,4 +259,40 @@ index.html
   - 点击导航链接跳转到对应区域
   - 点击分类按钮筛选样式
   - 滚动超过300px时显示返回顶部按钮
+
+### 原型生成器模块
+- **位置**: 样式展示区域顶部（`.prototype-generator-section`）
+- **组成**:
+  - 描述输入框（`.description-input`）
+  - 偏好设置选择器（`.preference-select`）
+  - 生成按钮（`.generate-btn`）
+  - 结果展示区域（`.generator-result`）
+- **核心功能**:
+  - **生成不同的小程序结构和功能点**，侧重于功能点的差异化
+  - 自然语言描述解析：提取结构、功能、交互方式等关键词
+  - 结构布局生成：生成不同的界面结构（单栏/双栏/三栏、导航位置等）
+  - 功能模块生成：生成不同的功能模块（搜索筛选、标签系统、优先级管理、时间视图等）
+  - 交互方式生成：生成不同的交互模式（侧滑操作、拖拽排序、批量操作等）
+  - 数据展示生成：生成不同的数据展示方式（列表/卡片/网格/时间轴/日历/看板等）
+  - 功能点差异化：确保新原型与现有原型在功能结构上保持差异
+  - 原型预览：实时预览生成的原型
+  - 原型保存：保存生成的原型到样式列表
+  - 功能点差异化分析：显示生成原型与现有原型在功能结构上的差异度
+- **生成内容**:
+  - **HTML结构**：根据描述生成不同的界面结构（导航位置、布局方式、功能模块等）
+  - **功能模块**：根据描述添加不同的功能点（搜索、筛选、标签、优先级、时间管理等）
+  - **交互方式**：根据描述实现不同的交互模式（侧滑、拖拽、批量操作等）
+  - **CSS样式**：生成对应的样式代码，确保界面美观且符合描述
+- **样式作用域**:
+  - **重要**：生成的原型样式和结构**仅应用于预览区域内的备忘录小程序界面**
+  - 使用CSS作用域选择器`.preview-content[data-style-id]`限制样式范围
+  - 所有样式规则都添加作用域前缀，确保不影响页面其他部分
+  - 通过`data-style-id`属性关联样式和预览元素
+  - 使用`--preview-*`前缀的CSS变量，避免与全局变量冲突
+  - 生成的HTML结构只插入到预览容器内，不影响页面其他部分
+- **交互**: 
+  - 输入描述并点击生成按钮
+  - 可选择偏好设置（结构类型、功能模块）
+  - 生成后可以预览和保存原型
+  - 支持Ctrl+Enter快捷键生成
 

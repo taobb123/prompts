@@ -26,6 +26,75 @@
         <section class="style-showcase">
             <h1 class="page-title">备忘录小程序样式展示</h1>
             
+            <!-- 原型生成器模块 -->
+            <div class="prototype-generator-section">
+                <h2 class="generator-title">🎨 原型生成器</h2>
+                <p class="generator-subtitle">用一句话描述你想要的小程序结构和功能，AI将为你生成独特的原型设计</p>
+                
+                <div class="generator-form">
+                    <div class="input-group">
+                        <label for="prototypeDescription">描述你的原型设计：</label>
+                        <textarea 
+                            id="prototypeDescription" 
+                            class="description-input" 
+                            placeholder="例如：双栏布局，左侧分类，右侧带标签系统和优先级管理的列表展示"
+                            rows="3"
+                        ></textarea>
+                        <div class="description-hints">
+                            <span class="hint-label">提示：</span>
+                            <span class="hint-text">可描述结构（单栏/双栏/三栏）、导航（顶部/底部/侧边栏）、功能（搜索/标签/优先级/日历）、交互（侧滑/拖拽/批量）、展示（列表/卡片/网格/时间轴）</span>
+                        </div>
+                    </div>
+                    
+                    <div class="preferences-group">
+                        <label>偏好设置（可选）：</label>
+                        <div class="preferences-row">
+                            <select id="structurePref" class="preference-select">
+                                <option value="">自动选择结构</option>
+                                <option value="单栏">单栏布局</option>
+                                <option value="双栏">双栏布局</option>
+                                <option value="三栏">三栏布局</option>
+                            </select>
+                            
+                            <select id="navigationPref" class="preference-select">
+                                <option value="">自动选择导航</option>
+                                <option value="顶部">顶部导航</option>
+                                <option value="底部">底部导航</option>
+                                <option value="侧边栏">侧边栏导航</option>
+                            </select>
+                            
+                            <select id="displayPref" class="preference-select">
+                                <option value="">自动选择展示</option>
+                                <option value="列表">列表展示</option>
+                                <option value="卡片">卡片展示</option>
+                                <option value="网格">网格展示</option>
+                                <option value="时间轴">时间轴展示</option>
+                                <option value="日历">日历展示</option>
+                                <option value="看板">看板展示</option>
+                            </select>
+                        </div>
+                        
+                        <div class="preferences-row">
+                            <select id="colorThemePref" class="preference-select">
+                                <option value="">自动选择颜色</option>
+                                <option value="浅色">浅色主题</option>
+                                <option value="深色">深色主题</option>
+                                <option value="彩色">彩色主题</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="generatePrototypeBtn" class="generate-btn">
+                        <span class="btn-icon">✨</span>
+                        <span class="btn-text">生成原型</span>
+                    </button>
+                </div>
+                
+                <div id="generatorResult" class="generator-result" style="display: none;">
+                    <!-- 生成结果将显示在这里 -->
+                </div>
+            </div>
+            
             <!-- 样式分类筛选 -->
             <div class="category-filter-section">
                 <h3 class="filter-title">样式分类</h3>
@@ -70,6 +139,8 @@
     </button>
     
     <script src="js/style-data-model.js"></script>
+    <script src="js/design-differentiator.js"></script>
+    <script src="js/prototype-generator.js"></script>
     <script src="js/style-manager.js"></script>
     <script src="js/preview.js"></script>
     <script src="js/navigation.js"></script>

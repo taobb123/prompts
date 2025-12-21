@@ -21,8 +21,9 @@ class PreviewManager {
 
         const preview = document.createElement('div');
         preview.className = `preview-content active preview-mode-${mode}`;
+        preview.setAttribute('data-style-id', style.id); // 添加样式ID用于CSS作用域
         
-        // 设置CSS变量用于预览
+        // 设置CSS变量用于预览（这些变量只作用于预览区域）
         const colors = style.preview.colors;
         preview.style.setProperty('--preview-primary', colors.primary);
         preview.style.setProperty('--preview-secondary', colors.secondary);

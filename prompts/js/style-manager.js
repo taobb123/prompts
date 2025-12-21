@@ -146,6 +146,7 @@ class StyleManager {
 
     /**
      * 应用样式方案
+     * 注意：对于生成的样式，使用动态style标签；对于文件样式，使用link标签
      * @param {string} styleId - 样式ID
      */
     applyStyle(styleId) {
@@ -155,17 +156,44 @@ class StyleManager {
             return;
         }
 
-        // 移除旧的样式链接
+        // 移除旧的样式链接或style标签
         if (this.styleLink) {
             this.styleLink.remove();
+            this.styleLink = null;
         }
 
-        // 创建新的样式链接
-        this.styleLink = document.createElement('link');
-        this.styleLink.rel = 'stylesheet';
-        this.styleLink.href = style.cssFile;
-        this.styleLink.id = 'current-style';
-        document.head.appendChild(this.styleLink);
+        // 检查是否为生成的样式（使用动态style标签）
+        if (style.isGenerated) {
+            // 从原型生成器获取CSS代码
+            const generatedPrototypes = prototypeGenerator.getGeneratedPrototypes();
+            const generated = generatedPrototypes.find(p => p.prototype.id === styleId);
+            
+            if (generated) {
+                // 检查是否已存在style标签
+                const existingStyle = document.getElementById(`style-${styleId}`);
+                if (existingStyle) {
+                    // 如果已存在，更新内容
+                    existingStyle.textContent = generated.cssCode;
+                    this.styleLink = existingStyle;
+                } else {
+                    // 创建新的style标签并注入CSS
+                    this.styleLink = document.createElement('style');
+                    this.styleLink.id = `style-${styleId}`;
+                    this.styleLink.type = 'text/css';
+                    this.styleLink.textContent = generated.cssCode;
+                    document.head.appendChild(this.styleLink);
+                }
+            } else {
+                console.warn('生成的样式未找到:', styleId);
+            }
+        } else {
+            // 对于文件样式，使用link标签
+            this.styleLink = document.createElement('link');
+            this.styleLink.rel = 'stylesheet';
+            this.styleLink.href = style.cssFile;
+            this.styleLink.id = 'current-style';
+            document.head.appendChild(this.styleLink);
+        }
 
         this.currentStyle = style;
         return style;
