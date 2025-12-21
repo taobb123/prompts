@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备忘录小程序样式展示</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-navbar" id="topNavbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="brand-icon">📝</span>
+                <span class="brand-text">备忘录样式展示</span>
+            </div>
+            <div class="navbar-links">
+                <a href="#styleCards" class="nav-link">样式列表</a>
+                <a href="#previewContainer" class="nav-link">预览</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 样式展示模块 -->
+        <section class="style-showcase">
+            <h1 class="page-title">备忘录小程序样式展示</h1>
+            
+            <!-- 样式分类筛选 -->
+            <div class="category-filter-section">
+                <h3 class="filter-title">样式分类</h3>
+                <div class="category-filter" id="categoryFilter">
+                    <!-- 分类按钮将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 样式卡片列表 -->
+            <div class="style-cards" id="styleCards">
+                <!-- 样式卡片将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 样式预览区域 -->
+            <div class="preview-section">
+                <div class="preview-header">
+                    <h2 class="preview-title">样式预览</h2>
+                    <div class="preview-controls" id="previewControls" style="display: none;">
+                        <button class="preview-mode-btn active" data-mode="desktop" title="桌面端预览">
+                            <span class="mode-icon">🖥️</span>
+                            <span class="mode-text">桌面</span>
+                        </button>
+                        <button class="preview-mode-btn" data-mode="mobile" title="移动端预览">
+                            <span class="mode-icon">📱</span>
+                            <span class="mode-text">移动</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="preview-container" id="previewContainer">
+                    <!-- 预览内容将通过JavaScript动态生成 -->
+                    <div class="preview-placeholder">
+                        <p>请选择一个样式方案进行预览</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <button class="scroll-to-top" id="scrollToTop" title="返回顶部">
+        <span class="scroll-icon">↑</span>
+    </button>
+    
+    <script src="js/style-data-model.js"></script>
+    <script src="js/style-manager.js"></script>
+    <script src="js/preview.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
